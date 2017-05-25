@@ -42,9 +42,9 @@
     WKWebViewConfiguration* config = [[WKWebViewConfiguration alloc] init];
     WKUserContentController* userController = [[WKUserContentController alloc]init];
     [userController addScriptMessageHandler:[[WeakScriptMessageDelegate alloc] initWithDelegate:self] name:@"reactNative"];
-
-    NSString *source = @"var inputs = document.querySelectorAll('input'); for (var i = 0; i < inputs.length; i++) { inputs[i].style.backgroundColor = 'red' };";
-    WKUserScript* userScript = [[WKUserScript alloc] initWithSource: source injectionTime: WKUserScriptInjectionTimeAtDocumentEnd, forMainFrameOnly: NO);
+    NSLog(@"************my code!!************");
+    NSString *source = @"alert('yey'); var inputs = document.querySelectorAll('input'); for (var i = 0; i < inputs.length; i++) { inputs[i].style.backgroundColor = 'red' };";
+    WKUserScript* userScript = [[WKUserScript alloc] initWithSource: source injectionTime: WKUserScriptInjectionTimeAtDocumentEnd forMainFrameOnly: NO];
     [_webView.configuration.userContentController addUserScript:userScript];
 
     config.userContentController = userController;
