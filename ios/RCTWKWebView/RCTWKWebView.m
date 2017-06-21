@@ -42,10 +42,23 @@
     WKWebViewConfiguration* config = [[WKWebViewConfiguration alloc] init];
     WKUserContentController* userController = [[WKUserContentController alloc]init];
     [userController addScriptMessageHandler:[[WeakScriptMessageDelegate alloc] initWithDelegate:self] name:@"reactNative"];
-    NSLog(@"************my code!!************");
-    NSString *source = @"alert('yey'); var inputs = document.querySelectorAll('input'); for (var i = 0; i < inputs.length; i++) { inputs[i].style.backgroundColor = 'red' };";
-    WKUserScript* userScript = [[WKUserScript alloc] initWithSource: source injectionTime: WKUserScriptInjectionTimeAtDocumentEnd forMainFrameOnly: NO];
-    [_webView.configuration.userContentController addUserScript:userScript];
+    
+    NSString *source = @" \
+      if (self!=top) { \
+        alert('I am an iframe!'); \
+        var inputs = document.querySelectorAll('body'); \
+        for (var i = 0; i < inputs.length; i++) { \
+          inputs[i].style.backgroundColor = 'red' \
+        }; \
+        function receiveMessage(event)\
+        {\
+          alert('Hey ' + event.origin + ', It works!');\
+          window.parent.postMessage('hello to you too', '*');\
+        };\
+        window.addEventListener('message', receiveMessage, false); \
+      };";
+    WKUserScript* userScript = [[WKUserScript alloc] initWithSource:source injectionTime:WKUserScriptInjectionTimeAtDocumentEnd forMainFrameOnly:NO];
+    [userController addUserScript:userScript];
 
     config.userContentController = userController;
 
